@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chai Kahani Menu</title>
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Background and font faces */
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Work+Sans:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Work Sans', sans-serif;
+      background: #fbf7f0 url('https://i.imgur.com/kOfeUtt.png') repeat; /* light paper texture */
+      color: #3a2c2c;
+      line-height: 1.6;
+      font-size: 16px;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 950px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border-radius: 20px;
+      padding: 30px 40px;
+      user-select: none;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    header h1 {
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: #4a351d;
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+      text-shadow: 0 1px 3px rgba(74, 53, 29, 0.3);
+    }
+
+    header p {
+      font-style: italic;
+      color: #6b5538;
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Accordion container */
+    .menu-categories {
+      width: 100%;
+    }
+
+    /* Category Title */
+    .category-title {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1.6rem;
+      background: #d7c9af;
+      padding: 15px 25px;
+      border-radius: 15px;
+      border: 2px solid #bfa975;
+      color: #3a2c2c;
+      margin-bottom: 12px;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      letter-spacing: 1.2px;
+      box-shadow: 0 3px 6px rgba(191, 169, 117, 0.4);
+      transition: background 0.3s ease;
+    }
+
+    .category-title:hover {
+      background: #bfa975;
+      color: #fff7e1;
+    }
+
+    .category-title span.icon {
+      font-weight: 700;
+      font-size: 1.8rem;
+      transition: transform 0.25s ease;
+    }
+
+    .category-title.active span.icon {
+      transform: rotate(45deg);
+    }
+
+    /* Category content */
+    .category-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease, padding 0.4s ease;
+      background: #f3ebd3;
+      margin-bottom: 30px;
+      border-radius: 0 0 15px 15px;
+      padding: 0 25px;
+      box-shadow: inset 0 0 7px rgba(191, 169, 117, 0.2);
+    }
+
+    .category-content.active {
+      padding: 15px 25px 25px;
+    }
+
+    /* Menu Items */
+    .menu-list {
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .menu-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 7px 0;
+      border-bottom: 1px dashed rgba(74, 53, 29, 0.25);
+      font-weight: 400;
+      font-size: 1.1rem;
+      color: #3a2c2c;
+    }
+
+    .menu-list li:last-child {
+      border-bottom: none;
+    }
+
+    .menu-list li strong {
+      font-weight: 600;
+    }
+
+    /* Sublist inside some categories (like add-ons) */
+    .menu-sublist {
+      list-style: none;
+      margin-top: 5px;
+      margin-left: 20px;
+      font-size: 0.95rem;
+      color: #5c4e2c;
+      font-style: italic;
+    }
+
+    .menu-sublist li {
+      border-bottom: none;
+      padding: 3px 0;
+    }
+
+    /* Quote */
+    .quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-style: italic;
+      text-align: center;
+      max-width: 700px;
+      margin: 30px auto 0;
+      color: #7a5a2d;
+      padding: 0 25px;
+      user-select: text;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      body {
+        padding: 20px 10px;
+      }
+      .container {
+        padding: 25px 20px;
+      }
+      .category-title {
+        font-size: 1.35rem;
+        padding: 12px 20px;
+      }
+      .menu-list li {
+        font-size: 1rem;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Chai Kahani</h1>
+      <p>Quaint, intimate tea house with al fresco seating, offering a selection of brews & light dishes.</p>
+    </header>
+
+    <div class="menu-categories">
+
+      <!-- Coffee Category -->
+      <div class="category">
+        <div class="category-title">Coffee <span class="icon">+</span></div>
+        <div class="category-content">
+          <ul class="menu-list">
+            <li><span>Espresso</span> <strong>₹80/-</strong></li>
+            <li><span>Americano</span> <strong>₹100/-</strong></li>
+            <li><span>Cappuccino</span> <strong>₹140/-</strong></li>
+            <li><span>Latte</span> <strong>₹140/-</strong></li>
+            <li><span>Mocha</span> <strong>₹160/-</strong></li>
+            <li><span>Vietnamese</span> <strong>₹160/-</strong></li>
+            <li><span>Hot Chocolate</span> <strong>₹180/-</strong></li>
+          </ul>
+          <p style="margin-top:10px;"><strong>Add Ons: ₹30/-</strong></p>
+          <ul class="menu-sublist">
+            <li>Hazelnut</li>
+            <li>Vanilla</li>
+            <li>Caramel</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Iced Coffee Category -->
+      <div class="category">
+        <div class="category-title">Iced Coffee <span class="icon">+</span></div>
+        <div class="category-content">
+          <ul class="menu-list">
+            <li><span>Iced Americano</span> <strong>₹120/-</strong></li>
+            <li><span>Cranberry Coffee</span> <strong>₹160/-</strong></li>
+            <li><span>Grenadine Coffee</span> <strong>₹160/-</strong></li>
+            <li><span>Iced Vietnamese</span> <strong>₹200/-</strong></li>
+            <li><span>Iced Mocha</span> <strong>₹200/-</strong></li>
+            <li><span>Iced Vanila Cream</span> <strong>₹200/-</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Cold Coffee Category -->
+      <div class="category">
+        <div class="category-title">Cold Coffee <span class="icon">+</span></div>
+        <div class="category-content">
+          <ul class="menu-list">
+            <li><span>Classic</span> <strong>₹180/-</strong></li>
+            <li><span>Chocolate</span> <strong>₹220/-</strong></li>
+            <li><span>Hazelnut</span> <strong>₹220/-</strong></li>
+            <li><span>Caramel</span> <strong>₹220/-</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Milkshakes Category -->
+      <div class="category">
+        <div class="category-title">Milkshakes <span class="icon">+</span></div>
+        <div class="category-content">
+          <ul class="menu-list">
+            <li><span>Vanilla</span> <strong>₹160/-</strong></li>
+            <li><span>Black Currant</span> <strong>₹180/-</strong></li>
+            <li><span>Chocolate</span> <strong>₹180/-</strong></li>
+            <li><span>Oreo</span> <strong>₹180/-</strong></li>
+            <li><span>Mango</span> <strong>₹200/-</strong></li>
+            <li><span>Mix Berry</span> <strong>₹200/-</strong></li>
+            <li><span>Kitkat</span> <strong>₹210/-</strong></li>
+            <li><span>Nutella</span> <strong>₹220/-</strong></li>
+            <li><span>Brownie</span> <strong>₹240/-</strong></li>
+            <li><span>Nutella Brownie</span> <strong>₹280/-</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Mocktails Category -->
+      <div class="category">
+        <div class="category-title">Mocktails <span class="icon">+</span></div>
+        <div class="category-content">
+          <ul class="menu-list">
+            <li><span>Virgin Mojito</span> <strong>₹180/-</strong></li>
+            <li><span>Blue Curacao</span> <strong>₹180/-</strong></li>
+            <li><span>Green Apple</span> <strong>₹180/-</strong></li>
+            <li><span>Watermelon</span> <strong>₹180/-</strong></li>
+            <li><span>Lime Water</span> <strong>₹79/-</strong></li>
+            <li><span>Fresh Lime Soda</span> <strong>₹99/-</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Desi Maggi & Snacks Category -->
+      <div class="category">
+        <div class="category-title">Desi Maggi & Snacks <span class="icon">+</span></div>
+        <div class="category-content">
+          <ul class="menu-list">
+            <li><span>Classic Maggi</span> <strong>₹110/-</strong></li>
+            <li><span>Vegetable Maggi</span> <strong>₹120/-</strong></li>
+            <li><span>Chilli Cheese Maggi</span> <strong>₹140/-</strong></li>
+            <li><span>Egg Maggi</span> <strong>₹160/-</strong></li>
+            <li><span>Chicken Maggi</span> <strong>₹180/-</strong></li>
+            <li><span>Chicken Kheema Maggi</span> <strong>₹200/-</strong></li>
+            <li><span>Mixed Veg Chicken Maggi</span> <strong>₹200/-</strong></li>
+            <li><span>Omelette Pav</span> <strong>₹120/-</strong></li>
+            <li><span>Egg Bhurji Pav</span> <strong>₹180/-</strong></li>
+            <li><span>Chicken Keema Pav</span> <strong>₹220/-</strong></li>
+            <li><span>Paneer Keema Pav</span> <strong>₹200/-</strong></li>
+            <li><span>Extra Pav</span> <strong>₹30/-</strong></li>
+            <li><span>Onion Pakoda</span> <strong>₹120/-</strong></li>
+            <li><span>Devilled Egg Pakoda</span> <strong>₹160/-</strong></li>
+            <li><span>Bread Pakoda</span> <strong>₹140/-</strong></li>
+            <li><span>Masala Bread Pakoda</span> <strong>₹180/-</strong></li>
+            <li><span>Chicken Pakoda</span> <strong>₹200/-</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Chaat & Sandwich Category -->
+      <div class="category">
+        <div class="category-title">Chaat & Sandwich <span class="icon">+</span></div>
+        <div class="category-content">
+          <strong>Chaat</strong>
+          <ul class="menu-list" style="margin-bottom:20px;">
+            <li><span>Pani Puri</span> <strong>₹99/-</strong></li>
+            <li><span>Sev Puri</span> <strong>₹120/-</strong></li>
+            <li><span>Bhel Puri</span> <strong>₹120/-</strong></li>
+            <li><span>Dahi Puri</span> <strong>₹140/-</strong></li>
+            <li><span>Dahi Papdi</span> <strong>₹160/-</strong></li>
+          </ul>
+
+          <strong>Sandwich</strong>
+          <ul class="menu-list">
+            <li><span>Veg Sandwich</span> <strong>₹150/-</strong></li>
+            <li><span>Veg Club Sandwich</span> <strong>₹200/-</strong></li>
+            <li><span>Bombay Style Veg Grill</span> <strong>₹220/-</strong></li>
+            <li><span>Tandoori Paneer</span> <strong>₹220/-</strong></li>
+            <li><span>Chicken Sandwich</span> <strong>₹200/-</strong></li>
+            <li><span>Chicken Club Sandwich</span> <strong>₹240/-</strong></li>
+            <li><span>Tandoori Chicken</span> <strong>₹220/-</strong></li>
+            <li><span>Chicken Kheema</span> <strong>₹220/-</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Burgers Category -->
+      <div class="category">
+        <div class="category-title">Burgers <span class="icon">+</span></div>
+        <div class="category-content">
+          <ul class="menu-list">
+            <li><span>Aloo Tikka Burger</span> <strong>₹160/-</strong></li>
+            <li><span>Veg Burger</span> <strong>₹180/-</strong></li>
+            <li><span>Chicken Burger</span> <strong>₹240/-</strong></li>
+            <li><span>King Chicken Burger</span> <strong>₹280/-</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Wings, Garlic Breads, Quick Bites Category -->
+      <div class="category">
+        <div class="category-title">Wings, Garlic Breads & Quick Bites <span class="icon">+</span></div>
+        <div class="category-content">
+          <strong>Wings</strong>
+          <ul class="menu-list" style="margin-bottom:20px;">
+            <li><span>Chicken Wings</span> <strong>₹260/-</strong></li>
+            <li><span>Barbeque Wings</span> <strong>₹260/-</strong></li>
+            <li><span>Buffalo Wings</span> <strong>₹260/-</strong></li>
+          </ul>
+          <strong>Garlic Breads</strong>
+          <ul class="menu-list" style="margin-bottom:20px;">
+            <li><span>Plain Garlic Bread</span> <strong>₹140/-</strong></li>
+            <li><span>Cheese Garlic Bread</span> <strong>₹170/-</strong></li>
+          </ul>
+          <strong>Quick Bites</strong>
+          <ul class="menu-list">
+            <li><span>Salted Fries</span> <strong>₹140/-</strong></li>
+            <li><span>Peri peri Fries</span> <strong>₹160/-</strong></li>
+            <li><span>Cheese loaded fries</span> <strong>₹180/-</strong></li>
+            <li><span>Masala Potato wedges</span> <strong>₹180/-</strong></li>
+            <li><span>Veg nuggets</span> <strong>₹180/-</strong></li>
+            <li><span>Chicken nuggets</span> <strong>₹180/-</strong></li>
+            <li><span>Chicken bites</span> <strong>₹180/-</strong></li>
+            <li><span>Chicken fingers</span> <strong>₹180/-</strong></li>
+            <li><span>Chicken keema fries</span> <strong>₹200/-</strong></li>
+            <li><span>Fish fingers</span> <strong>₹220/-</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Pasta, Toast, Mains Category -->
+      <div class="category">
+        <div class="category-title">Pasta, Toast & Mains <span class="icon">+</span></div>
+        <div class="category-content">
+          <strong>Pasta</strong>
+          <ul class="menu-list" style="margin-bottom:20px;">
+            <li><span>Aglio olio (Veg / Non-Veg)</span> <strong>₹280 / ₹320</strong></li>
+            <li><span>White sauce (Veg / Non-Veg)</span> <strong>₹280 / ₹320</strong></li>
+            <li><span>Red sauce (Veg / Non-Veg)</span> <strong>₹280 / ₹320</strong></li>
+            <li><span>Pink sauce (Veg / Non-Veg)</span> <strong>₹280 / ₹320</strong></li>
+            <li><span>Add Ons</span> <strong>₹50/-</strong></li>
+          </ul>
+          <strong>Toast</strong>
+          <ul class="menu-list" style="margin-bottom:20px;">
+            <li><span>Corn & Cheese</span> <strong>₹220/-</strong></li>
+            <li><span>Chicken Toast</span> <strong>₹280/-</strong></li>
+          </ul>
+          <strong>Mains</strong>
+          <ul class="menu-list">
+            <li><span>Grilled Chicken (Grill Chicken, Sautee Veggies, Mashed Potato)</span> <strong>₹300/-</strong></li>
+            <li><span>Grilled Paneer (Grilled Paneer, Sautee Veggies, Mashed Potato)</span> <strong>₹280/-</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Breakfast, Smoothies, Salad & Juices Category -->
+      <div class="category">
+        <div class="category-title">Breakfast & Smoothies <span class="icon">+</span></div>
+        <div class="category-content">
+          <strong>Breakfast</strong>
+          <ul class="menu-list" style="margin-bottom:20px;">
+            <li>English Breakfast (with coffee / juice) - ₹340/- (Omelette, Sausages, Mushrooms, Baked Beans, Hash Browns, Toasts)</li>
+            <li>American Breakfast (with coffee / juice) - ₹340/- (Pancakes/Waffle, Boiled Eggs, Cereals, Fruit bowl)</li>
+            <li>Desi: Poori Kheema - ₹180/-</li>
+            <li>Desi: Poha - ₹120/-</li>
+          </ul>
+
+          <strong>Desi Omelette</strong>
+          <ul class="menu-list" style="margin-bottom:20px;">
+            <li>Classic Omelette - ₹160/-</li>
+            <li>Sunny Side Up - ₹180/-</li>
+            <li>Masala Omelette - ₹180/-</li>
+            <li>Masala Cheese Omelette - ₹200/-</li>
+            <li>Mix Veg Chicken - ₹220/-</li>
+            <li>Chicken Cheese - ₹220/-</li>
+            <li>Add Ons (Hash Brown / Vegetables / Cheese) - ₹30/-</li>
+          </ul>
+          <strong>Smoothies & Bowls</strong>
+          <ul class="menu-list" style="margin-bottom:20px;">
+            <li>Mix Berry Smoothie - ₹260/-</li>
+            <li>Chocolate Banana Smoothie - ₹260/-</li>
+            <li>Peanut Butter Smoothie - ₹260/-</li>
+            <li>Very Berry Smoothie Bowl - ₹320/-</li>
+            <li>Strawberry Banana Bowl - ₹280/-</li>
+            <li>Chocolate Banana Bowl - ₹300/-</li>
+          </ul>
+          <strong>Salads</strong>
+          <ul class="menu-list" style="margin-bottom:20px;">
+            <li>Fruit Bowl - ₹200/-</li>
+            <li>Watermelon Feta - ₹200/-</li>
+            <li>Greek Salad - ₹220/-</li>
+            <li>Boiled Egg Salad - ₹220/-</li>
+            <li>Grilled Chicken Salad - ₹260/-</li>
+          </ul>
+          <strong>Fresh Juices</strong>
+          <ul class="menu-list">
+            <li>Watermelon - ₹120/-</li>
+            <li>Pineapple - ₹140/-</li>
+            <li>Watermelon, Cucumber, Mint - Price on request</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Waffles, Pancakes & French Toast Category -->
+      <div class="category">
+        <div class="category-title">Waffles, Pancakes & French Toast <span class="icon">+</span></div>
+        <div class="category-content">
+          <strong>Waffles</strong>
+          <ul class="menu-list" style="margin-bottom:20px;">
+            <li>Classic Waffle - ₹210/-</li>
+            <li>Dark Chocolate Waffle - ₹240/-</li>
+            <li>Ice Cream Waffle - ₹280/-</li>
+            <li>Triple Chocolate Waffle - ₹300/-</li>
+            <li>Blueberry Waffle - ₹300/-</li>
+            <li>Nutella Waffle - ₹320/-</li>
+            <li>Caramel Banana Waffle - ₹320/-</li>
+          </ul>
+          <strong>Pancakes</strong>
+          <ul class="menu-list" style="margin-bottom:20px;">
+            <li>Classic Pancake - ₹210/-</li>
+            <li>Choco Chip Pancake - ₹280/-</li>
+            <li>Blueberry Pancake - ₹260/-</li>
+            <li>Nutella Pancake - ₹320/-</li>
+          </ul>
+          <strong>French Toast</strong>
+          <ul class="menu-list">
+            <li>Classic French Toast - ₹240/-</li>
+            <li>Caramel French Toast - ₹220/-</li>
+            <li>Chocolate French Toast - ₹220/-</li>
+            <li>Blueberry French Toast - ₹220/-</li>
+            <li>Add Ons (Ice Cream / Maple Syrup / Nutella) - ₹50/-</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Brownie Category -->
+      <div class="category">
+        <div class="category-title">Brownie <span class="icon">+</span></div>
+        <div class="category-content">
+          <ul class="menu-list">
+            <li>Brownie - ₹99/-</li>
+            <li>Add On Ice Cream - ₹30/-</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="quote">
+      “A cup of tea is an excuse to slow down, pull back and appreciate our surroundings.”<br> — Chai Kahani
+    </div>
+
+  </div>
+
+  <script>
+    // Accordion functionality
+    const categoryTitles = document.querySelectorAll('.category-title');
+
+    categoryTitles.forEach(title => {
+      title.addEventListener('click', () => {
+        const isActive = title.classList.contains('active');
+        
+        // Close all categories
+        categoryTitles.forEach(t => {
+          t.classList.remove('active');
+          t.nextElementSibling.style.maxHeight = null;
+          t.nextElementSibling.classList.remove('active');
+          t.querySelector('.icon').textContent = "+";
+        });
+
+        // If previously not active, open current
+        if (!isActive) {
+          title.classList.add('active');
+          const content = title.nextElementSibling;
+          content.classList.add('active');
+          content.style.maxHeight = content.scrollHeight + "px";
+          title.querySelector('.icon').textContent = "−";
+        }
+      });
+    });
+
+    // Open first category by default
+    if(categoryTitles.length > 0) {
+      categoryTitles[0].click();
+    }
+  </script>
+
+</body>
+</html>
